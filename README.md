@@ -1,28 +1,30 @@
 # Reactive Stock Price Service
 
-A non-blocking, reactive RESTful service built with Spring WebFlux and Project Reactor to provide real-time stock price data via Server-Sent Events (SSE).
+![Spring WebFlux](https://img.shields.io/badge/Spring--Boot-3.x-brightgreen)
+![Project Reactor](https://img.shields.io/badge/Project--Reactor-Flux%2FMono-blue)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
 
-## Technologies Used
-* Java 17+
-* Spring Boot 3+ (Spring WebFlux)
-* Project Reactor (Mono & Flux)
-* Docker & Docker Compose
+A high-concurrency, non-blocking stock price service built with **Spring WebFlux** and **Project Reactor**. This service provides real-time data using request-response patterns and live streaming via Server-Sent Events (SSE).
 
-## Setup and Running the Application
+## 🚀 Key Features
+- **Non-Blocking APIs:** Fully reactive endpoints for the best resource utilization.
+- **Live Streaming:** Real-time stock price fluctuations via SSE.
+- **Asynchronous Logging:** Custom `WebFilter` to track request metrics without blocking.
+- **Containerized:** Ready to run anywhere with Docker Compose.
 
-1. **Build the Java Application:**
-   First, compile the code and package it into a JAR file.
-   `./mvnw clean package` (or `mvn clean package` if Maven is installed globally)
+## 📚 Documentation
+Explore the detailed guides below to understand the project better:
 
-2. **Set up Environment Variables:**
-   Copy the example environment file and create your local `.env`.
-   `cp .env.example .env`
+1.  **[Project Overview](docs/OVERVIEW.md)** - Why reactive? The problem and our solution.
+2.  **[Architecture & Design](docs/ARCHITECTURE.md)** - High-level and Low-level design docs.
+3.  **[API Reference](docs/API.md)** - How to use the endpoints.
+4.  **[Deployment Guide](docs/DEPLOYMENT.md)** - How to build and run the service.
 
-3. **Run with Docker Compose:**
-   Build the Docker image and start the container.
-   `docker-compose up --build`
+## 🛠️ Quick Start
+1. Clone the repository.
+2. Ensure Docker is running.
+3. Run `docker-compose up --build -d`.
+4. Access the API at `http://localhost:8080/api/stocks/AAPL`.
 
-## API Endpoints
-* **Single Stock:** `GET /api/stocks/{symbol}` (e.g., /api/stocks/AAPL)
-* **Multiple Stocks:** `GET /api/stocks?symbols={sym1,sym2}` (e.g., /api/stocks?symbols=AAPL,GOOG)
-* **Live SSE Stream:** `GET /api/stocks/stream/{symbol}`
+---
+*Built for high performance and scalability.*
