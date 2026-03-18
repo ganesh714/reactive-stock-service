@@ -33,3 +33,7 @@ graph LR
 - **Non-blocking Delays:** Instead of `Thread.sleep()`, we use `Flux.interval()` for the stock price stream.
 - **Asynchronous Logging:** The logging filter uses `.doFinally()` to ensure logs are written only after the response is completed, without blocking the main execution path.
 - **Pure Reactive Chains:** All endpoints are designed to return `Mono` or `Flux` directly, avoiding any `.block()` calls.
+
+## Future Enhancements & Scalability
+
+For detailed future enhancements and scalability guidance, see [docs/FUTURE_ENHANCEMENTS.md](docs/FUTURE_ENHANCEMENTS.md).
