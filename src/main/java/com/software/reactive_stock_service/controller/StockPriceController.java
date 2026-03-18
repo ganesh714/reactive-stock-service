@@ -22,27 +22,28 @@ public class StockPriceController {
 
 	@Autowired
 	StockPriceService stockPriceService;
-	
+
 	@GetMapping("/api/stocks/{symbol}")
-	public Mono<StockPrice> getStockPrice(@PathVariable String symbol){
+	public Mono<StockPrice> getStockPrice(@PathVariable String symbol) {
 		return stockPriceService.getStockPrice(symbol);
 	}
-	
+
 	@GetMapping("/api/stocks")
 	public Flux<StockPrice> getMultipleStockPrices(@RequestParam String symbols) {
-		List<String> symbolsList = Arrays.asList(symbols.split(","));
-		return stockPriceService.getMultipleStockPrices(symbolsList);
-	}
-	
-	@GetMapping( value =  "/api/stocks/stream/{symbol}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	public Flux<ServerSentEvent<StockPrice>> getStockPriceStream(@PathVariable String symbol) {
-		return stockPriceService.getStockPriceStream(symbol)
-                .map(stockPrice -> ServerSentEvent.<StockPrice>builder()
-                        .id(String.valueOf(stockPrice.timestamp())) // Optional: giving each event an ID
-                        .event("price-update")                      // Optional: naming the event type
-                        .data(stockPrice)                           // The actual JSON payload
-                        .build());
+
+		return Flux.fromArray(symbols.split(","))
+				.map(String::trim)
+				.flatMap(symbol -> stockPriceService.getStockPrice(symbol));
 	}
 
+	@GetMapping(value = "/api/stocks/stream/{symbol}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<ServerSentEvent<StockPrice>> getStockPriceStream(@PathVariable String symbol) {
+		return stockPriceService.getStockPriceStream(symbol)
+				.map(stockPrice -> ServerSentEvent.<StockPrice>builder()
+						.id(String.valueOf(stockPrice.timestamp())) // Optional: giving each event an ID
+						.event("price-update") // Optional: naming the event type
+						.data(stockPrice) // The actual JSON payload
+						.build());
+	}
 
 }
