@@ -16,46 +16,46 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class StockPriceService {
-	
+
 	private final Map<String, Double> stockBasePrices = Map.of(
-	    "AAPL", 150.00,
-	    "GOOG", 2800.00,
-	    "MSFT", 300.00,
-	    "AMZN", 3400.00,
-	    "TSLA", 700.00
-	);
-	
-	public Mono<StockPrice> getStockPrice(String symbol){
+			"AAPL", 150.00,
+			"GOOG", 2800.00,
+			"MSFT", 300.00,
+			"AMZN", 3400.00,
+			"TSLA", 700.00);
+
+	public Mono<StockPrice> getStockPrice(String symbol) {
 		String upperSymbol = symbol.toUpperCase();
 		Double basePrice = stockBasePrices.getOrDefault(upperSymbol, 100.00);
-		return Mono.just(new StockPrice(upperSymbol,basePrice,System.currentTimeMillis()));
+		return Mono.just(new StockPrice(upperSymbol, basePrice, System.currentTimeMillis()));
 	}
-	
+
 	public Flux<StockPrice> getMultipleStockPrices(List<String> symbols) {
 		List<StockPrice> fetchedPrices = new ArrayList<>();
-		
-		for (String symbol:symbols) {
+
+		for (String symbol : symbols) {
 			String upperSymbol = symbol.toUpperCase();
 			Double basePrice = stockBasePrices.getOrDefault(upperSymbol, 100.00);
 			StockPrice stockPrice = new StockPrice(upperSymbol, basePrice, System.currentTimeMillis());
+			fetchedPrices.add(stockPrice);
 		}
-		
+
 		return Flux.fromIterable(fetchedPrices);
 	}
-	
+
 	public Flux<StockPrice> getStockPriceStream(String symbol) {
 		String upperSymbol = symbol.toUpperCase();
 		Double basePrice = stockBasePrices.getOrDefault(upperSymbol, 100.00);
-		
+
 		return Flux.interval(Duration.ofSeconds(1))
 				.map(tick -> {
 					double fluctuation = ThreadLocalRandom.current().nextDouble(-0.05, 0.05);
-                    double currentPrice = basePrice + (basePrice * fluctuation);
-                    
-                    // Round the price to 2 decimal places so it looks realistic
-                    double roundedPrice = Math.round(currentPrice * 100.0) / 100.0;
+					double currentPrice = basePrice + (basePrice * fluctuation);
 
-                    return new StockPrice(upperSymbol, roundedPrice, System.currentTimeMillis());				
-                });
+					// Round the price to 2 decimal places so it looks realistic
+					double roundedPrice = Math.round(currentPrice * 100.0) / 100.0;
+
+					return new StockPrice(upperSymbol, roundedPrice, System.currentTimeMillis());
+				});
 	}
 }

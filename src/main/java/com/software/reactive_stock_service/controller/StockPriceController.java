@@ -30,10 +30,8 @@ public class StockPriceController {
 
 	@GetMapping("/api/stocks")
 	public Flux<StockPrice> getMultipleStockPrices(@RequestParam String symbols) {
-
-		return Flux.fromArray(symbols.split(","))
-				.map(String::trim)
-				.flatMap(symbol -> stockPriceService.getStockPrice(symbol));
+		List<String> symbolsList = Arrays.asList(symbols.split(","));
+		return stockPriceService.getMultipleStockPrices(symbolsList);
 	}
 
 	@GetMapping(value = "/api/stocks/stream/{symbol}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
